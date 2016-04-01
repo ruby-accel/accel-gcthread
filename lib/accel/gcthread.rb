@@ -3,7 +3,7 @@ module Accel
     @interval = 2
     @procs = []
 
-    def self.setup(cond_proc, post_proc, interval=nil)
+    def self.setup(cond_proc, post_proc=nil, interval=nil)
       h = {:cond => cond_proc, :post => post_proc}
       @procs << h
       if interval and @interval > interval
@@ -32,7 +32,7 @@ module Accel
             if h[:cond].call
               GC.start
               @procs.each{|h|
-                h[:post].call
+                h[:post].call if h[:cond]
               }
               break
             end
