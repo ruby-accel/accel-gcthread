@@ -1,15 +1,15 @@
 module Accel
   module GCThread
     @interval = 2
-    @cond_procs = []
-    @post_procs = []
+    @procs = []
 
     def self.setup(cond_proc, post_proc, interval=nil)
-      @cond_procs << cond_proc
-      @post_procs << post_proc
+      h = {:cond => cond_proc, :post => post_proc}
+      @procs << h
       if interval and @interval > interval
         @interval = interval
       end
+      h
     end
 
     def self.thread
@@ -27,21 +27,17 @@ module Accel
     @thread = Thread.start do
       loop do
         sleep(@interval)
-        @cond_procs.each{|cproc|
+        @procs.each{|h|
           begin
-            if cproc.call
+            if h[:cond].call
               GC.start
-              @post_procs.each{|pproc|
-                pproc.call
+              @procs.each{|h|
+                h[:post].call
               }
               break
             end
           rescue => e
-            b = e.backtrace.join("\n")
-            $stderr.puts "at Accel::GCThread"
-            $stderr.puts e.inspect
-            $stderr.puts b
-            GC.start
+            Thread.main.raise(e.exception, e.message, e.backtrace)
           end
         }
       end
