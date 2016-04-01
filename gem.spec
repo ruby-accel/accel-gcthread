@@ -1,9 +1,9 @@
 Gem::Specification.new do |s|
   s.name        = 'accel-gcthread'
-  s.version     = '0.0.1.pre1'
-  s.date        = '2016-03-31'
-  s.summary     = "GCThread"
-  s.description = "GCThread"
+  s.version     = '0.0.1'
+  s.date        = '2016-04-01'
+  s.summary     = "A simple Ruby-level GC thread"
+  s.description = "A simple Ruby-level GC thread used with other ruby-accel gems."
   s.authors     = ["Takashi Tamura"]
   s.email       = ''
   s.files       = ["LICENSE", 
